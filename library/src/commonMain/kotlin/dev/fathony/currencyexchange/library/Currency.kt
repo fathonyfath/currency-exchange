@@ -1,4 +1,4 @@
-package dev.fathony.currencyexchange.library.model
+package dev.fathony.currencyexchange.library
 
 class Currency internal constructor(
     val code: String,
