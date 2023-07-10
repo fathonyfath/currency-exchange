@@ -13,7 +13,7 @@ plugins {
 }
 
 group = "dev.fathony.currencyexchange"
-version = "1.0.0"
+version = "1.1.0"
 
 kotlin {
     targetHierarchy.default()
