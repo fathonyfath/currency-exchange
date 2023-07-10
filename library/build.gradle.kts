@@ -1,12 +1,17 @@
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+@file:Suppress("OPT_IN_USAGE")
+
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
     id("com.android.library")
+    `maven-publish`
 }
 
-@OptIn(ExperimentalKotlinGradlePluginApi::class)
+group = "dev.fathony.currencyexchange"
+version = "1.0-SNAPSHOT"
+
 kotlin {
     targetHierarchy.default()
 
@@ -16,8 +21,11 @@ kotlin {
                 jvmTarget = "1.8"
             }
         }
+
+        publishLibraryVariants("release")
     }
 
+    val xcf = XCFramework()
     listOf(
         iosX64(),
         iosArm64(),
@@ -25,6 +33,7 @@ kotlin {
     ).forEach {
         it.binaries.framework {
             baseName = "library"
+            xcf.add(this)
         }
     }
 
@@ -73,5 +82,18 @@ android {
     compileSdk = 33
     defaultConfig {
         minSdk = 21
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "gpr"
+            url = uri("https://maven.pkg.github.com/fathonyfath/currency-exchange")
+            credentials {
+                username = project.findProperty("gpr.user") as String? ?: System.getenv("GITHUB_ACTOR")
+                password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
     }
 }
