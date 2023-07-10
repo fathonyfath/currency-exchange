@@ -1,6 +1,9 @@
 @file:Suppress("OPT_IN_USAGE")
 
+import android.databinding.tool.ext.capitalizeUS
+import android.databinding.tool.ext.toCamelCase
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFrameworkTask
 
 plugins {
     kotlin("multiplatform")
@@ -32,7 +35,7 @@ kotlin {
         iosSimulatorArm64(),
     ).forEach {
         it.binaries.framework {
-            baseName = "library"
+            baseName = "Library"
             xcf.add(this)
         }
     }
@@ -41,6 +44,8 @@ kotlin {
         val ktorVersion = "2.3.2"
         val coroutinesVersion = "1.7.2"
         val serializationVersion = "1.5.1"
+        val kotlinResultVersion = "1.1.18"
+        val dateTimeVersion = "0.4.0"
 
         val commonMain by getting {
             dependencies {
@@ -49,6 +54,8 @@ kotlin {
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
+                implementation("org.jetbrains.kotlinx:kotlinx-datetime:$dateTimeVersion")
+                api("com.michael-bull.kotlin-result:kotlin-result:$kotlinResultVersion")
             }
         }
 
@@ -95,5 +102,20 @@ publishing {
                 password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
             }
         }
+    }
+}
+
+tasks.withType<XCFrameworkTask>().forEach { task ->
+    val buildType = task.buildType.getName().capitalizeUS()
+    tasks.register("logForXCFType$buildType") {
+        group = "logging"
+        description = "Help with logging XCF Framework with build type $buildType"
+
+        logging.captureStandardOutput(LogLevel.INFO)
+
+        val outputXCFrameworkFile = task.outputDir
+            .resolve(task.buildType.getName())
+            .resolve("${task.baseName.map { it.replace('-', '_') }.get()}.xcframework")
+        println("Output dir is here: $outputXCFrameworkFile")
     }
 }
