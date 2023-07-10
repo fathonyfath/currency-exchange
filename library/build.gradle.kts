@@ -13,7 +13,7 @@ plugins {
 }
 
 group = "dev.fathony.currencyexchange"
-version = "1.1.0"
+version = "1.2.0"
 
 kotlin {
     targetHierarchy.default()
@@ -35,7 +35,7 @@ kotlin {
         iosSimulatorArm64(),
     ).forEach {
         it.binaries.framework {
-            baseName = "Library"
+            baseName = "library"
             xcf.add(this)
         }
     }
