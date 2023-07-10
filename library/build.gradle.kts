@@ -13,7 +13,7 @@ plugins {
 }
 
 group = "dev.fathony.currencyexchange"
-version = "1.2.0"
+version = "1.3.0"
 
 kotlin {
     targetHierarchy.default()
@@ -54,7 +54,7 @@ kotlin {
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:$dateTimeVersion")
+                api("org.jetbrains.kotlinx:kotlinx-datetime:$dateTimeVersion")
                 api("com.michael-bull.kotlin-result:kotlin-result:$kotlinResultVersion")
             }
         }
