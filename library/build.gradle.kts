@@ -2,11 +2,13 @@
 
 import android.databinding.tool.ext.capitalizeUS
 import android.databinding.tool.ext.toCamelCase
+import org.jetbrains.kotlin.gradle.plugin.mpp.BitcodeEmbeddingMode
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFrameworkTask
 
 plugins {
     kotlin("multiplatform")
+    kotlin("native.cocoapods")
     kotlin("plugin.serialization")
     id("com.android.library")
     `maven-publish`
@@ -37,6 +39,20 @@ kotlin {
         it.binaries.framework {
             baseName = "library"
             xcf.add(this)
+        }
+    }
+
+    cocoapods {
+        version = project.version.toString()
+        summary = "Library for getting Currency Exchange values"
+        homepage = "https://github.com/fathonyfath/currency-exchange"
+        authors = "Fathony Teguh Irawan"
+        license = "{ :type => 'MIT', :text => 'Do whatever you want License' }"
+        source = "{ :http => 'https://github.com/fathonyfath/currency-exchange/releases/download/v1.3.0/library.xcframework.zip' }"
+        ios.deploymentTarget = "14.1"
+
+        framework {
+            baseName = "library"
         }
     }
 
@@ -90,6 +106,12 @@ android {
     defaultConfig {
         minSdk = 21
     }
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
 }
 
 publishing {
@@ -102,20 +124,5 @@ publishing {
                 password = project.findProperty("gpr.key") as String? ?: System.getenv("GITHUB_TOKEN")
             }
         }
-    }
-}
-
-tasks.withType<XCFrameworkTask>().forEach { task ->
-    val buildType = task.buildType.getName().capitalizeUS()
-    tasks.register("logForXCFType$buildType") {
-        group = "logging"
-        description = "Help with logging XCF Framework with build type $buildType"
-
-        logging.captureStandardOutput(LogLevel.INFO)
-
-        val outputXCFrameworkFile = task.outputDir
-            .resolve(task.buildType.getName())
-            .resolve("${task.baseName.map { it.replace('-', '_') }.get()}.xcframework")
-        println("Output dir is here: $outputXCFrameworkFile")
     }
 }
