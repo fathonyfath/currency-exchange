@@ -15,7 +15,14 @@ plugins {
 }
 
 group = "dev.fathony.currencyexchange"
-version = "1.3.0"
+version = "1.4.0"
+
+val ktorVersion = "2.3.2"
+val coroutinesVersion = "1.7.2"
+val serializationVersion = "1.5.1"
+val kotlinResultVersion = "1.1.18"
+val dateTimeVersion = "0.4.0"
+val bigNumVersion = "0.3.8"
 
 kotlin {
     targetHierarchy.default()
@@ -53,15 +60,13 @@ kotlin {
 
         framework {
             baseName = "library"
+            export("com.ionspin.kotlin:bignum:$bigNumVersion")
+            export("org.jetbrains.kotlinx:kotlinx-datetime:$dateTimeVersion")
+            export("com.michael-bull.kotlin-result:kotlin-result:$kotlinResultVersion")
         }
     }
 
     sourceSets {
-        val ktorVersion = "2.3.2"
-        val coroutinesVersion = "1.7.2"
-        val serializationVersion = "1.5.1"
-        val kotlinResultVersion = "1.1.18"
-        val dateTimeVersion = "0.4.0"
 
         val commonMain by getting {
             dependencies {
@@ -70,6 +75,7 @@ kotlin {
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
+                api("com.ionspin.kotlin:bignum:$bigNumVersion")
                 api("org.jetbrains.kotlinx:kotlinx-datetime:$dateTimeVersion")
                 api("com.michael-bull.kotlin-result:kotlin-result:$kotlinResultVersion")
             }
