@@ -15,7 +15,7 @@ plugins {
 }
 
 group = "dev.fathony.currencyexchange"
-version = "1.4.0"
+version = "1.5.0"
 
 val ktorVersion = "2.3.2"
 val coroutinesVersion = "1.7.2"
@@ -46,6 +46,10 @@ kotlin {
         it.binaries.framework {
             baseName = "library"
             xcf.add(this)
+
+            export("com.ionspin.kotlin:bignum:$bigNumVersion")
+            export("org.jetbrains.kotlinx:kotlinx-datetime:$dateTimeVersion")
+            export("com.michael-bull.kotlin-result:kotlin-result:$kotlinResultVersion")
         }
     }
 
